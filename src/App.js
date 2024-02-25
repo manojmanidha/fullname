@@ -9,24 +9,35 @@ import React, { useState } from 'react';
 function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [warningMessage, setWarningMessage] = useState('');
+  const [warningMessages, setWarningMessages] = useState({
+    firstName: '',
+    lastName: '',
+  });
+  const [fullName, setFullName] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const submitForm = () => {
-    if (firstName && lastName) {
-      // alert(`Full Name: ${firstName} ${lastName}`);
-      // You can perform additional actions here, like updating the state or making an API call.
-    } else {
-      setWarningMessage('Please fill out this field.');
-    }
-  };
+    const newWarningMessages = {};
 
-  const clearWarning = () => {
-    setWarningMessage('');
+    if (!firstName.trim()) {
+      newWarningMessages.firstName = 'Please fill out this field.';
+    }
+
+    if (!lastName.trim()) {
+      newWarningMessages.lastName = 'Please fill out this field.';
+    }
+
+    if (Object.keys(newWarningMessages).length === 0) {
+      setFullName(`${firstName} ${lastName}`);
+      setFormSubmitted(true);
+    } else {
+      setFormSubmitted(false);
+      setWarningMessages(newWarningMessages);
+    }
   };
 
   return (
     <div>
-      <h1>Full Name Display</h1>
       <form>
         <label htmlFor="firstName">First Name:</label>
         <input
@@ -36,11 +47,18 @@ function App() {
           value={firstName}
           onChange={(e) => {
             setFirstName(e.target.value);
-            clearWarning();
+            setWarningMessages((prevWarnings) => ({
+              ...prevWarnings,
+              firstName: '',
+            }));
           }}
           required
         />
         <br />
+        {warningMessages.firstName && (
+          <p style={{ color: 'red' }}>{warningMessages.firstName}</p>
+        )}
+
         <label htmlFor="lastName">Last Name:</label>
         <input
           type="text"
@@ -49,21 +67,26 @@ function App() {
           value={lastName}
           onChange={(e) => {
             setLastName(e.target.value);
-            clearWarning();
+            setWarningMessages((prevWarnings) => ({
+              ...prevWarnings,
+              lastName: '',
+            }));
           }}
           required
         />
         <br />
+        {warningMessages.lastName && (
+          <p style={{ color: 'red' }}>{warningMessages.lastName}</p>
+        )}
+
         <button type="button" onClick={submitForm}>
           Submit
         </button>
-        
       </form>
-     
-        {firstName && lastName && <h5>Full Name: {firstName} {lastName}</h5>}
-      {warningMessage && <p style={{ color: 'red' }}>{warningMessage}</p>}
+
+      {formSubmitted && <p>Full Name: {fullName}</p>}
     </div>
   );
-}
+};
 
 export default App;
