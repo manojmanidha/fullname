@@ -16,7 +16,8 @@ function App() {
   const [fullName, setFullName] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const submitForm = () => {
+  const submitForm = (e) => {
+    e.preventDefault();
     const newWarningMessages = {};
 
     if (!firstName.trim()) {
