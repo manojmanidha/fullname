@@ -1,94 +1,48 @@
-import './App.css';
-// import useState from 'react';
 import React, { useState } from 'react';
-
-// function validateInput(){
-//   if()
-// }
+import './App.css'; // You can include your CSS styling
 
 function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [warningMessages, setWarningMessages] = useState({
-    firstName: '',
-    lastName: '',
-  });
   const [fullName, setFullName] = useState('');
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const submitForm = (e) => {
-    e.preventDefault();
-    const newWarningMessages = {};
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
+  };
 
-    if (!firstName.trim()) {
-      newWarningMessages.firstName = 'Please fill out this field.';
-    }
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+  };
 
-    if (!lastName.trim()) {
-      newWarningMessages.lastName = 'Please fill out this field.';
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    if (Object.keys(newWarningMessages).length === 0) {
-      setFullName(`${firstName} ${lastName}`);
-      setFormSubmitted(true);
-    } else {
-      setFormSubmitted(false);
-      setWarningMessages(newWarningMessages);
+    // Check if both first name and last name are filled
+    if (firstName.trim() !== '' && lastName.trim() !== '') {
+      const fullNameResult = `${firstName} ${lastName}`;
+      setFullName(fullNameResult);
     }
   };
 
   return (
-    <div>
-      <form>
-        <h1>Full Name Display</h1>
-        <label htmlFor="firstName">First Name:</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          value={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value);
-            setWarningMessages((prevWarnings) => ({
-              ...prevWarnings,
-              firstName: '',
-            }));
-          }}
-          required
-        />
+    <div className="App">
+    <h1>Full Name Display</h1>
+      <form onSubmit={handleSubmit}>
+        <label>
+          First Name:
+          <input type="text" value={firstName} onChange={handleFirstNameChange} />
+        </label>
         <br />
-        {warningMessages.firstName && (
-          <p style={{ color: 'red' }}>{warningMessages.firstName}</p>
-        )}
-
-        <label htmlFor="lastName">Last Name:</label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={lastName}
-          onChange={(e) => {
-            setLastName(e.target.value);
-            setWarningMessages((prevWarnings) => ({
-              ...prevWarnings,
-              lastName: '',
-            }));
-          }}
-          required
-        />
+        <label>
+          Last Name:
+          <input type="text" value={lastName} onChange={handleLastNameChange} />
+        </label>
         <br />
-        {warningMessages.lastName && (
-          <p style={{ color: 'red' }}>{warningMessages.lastName}</p>
-        )}
-
-        <button type="button" onClick={submitForm}>
-          Submit
-        </button>
+        <button type="submit">Submit</button>
       </form>
-
-      {formSubmitted && <p>Full Name: {fullName}</p>}
+      {fullName && <div>Full Name: {fullName}</div>}
     </div>
   );
-};
+}
 
 export default App;
